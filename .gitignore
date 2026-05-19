@@ -1,0 +1,16 @@
+# Среда разработки (Visual Studio / VS Code)
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Папки компиляции (бинарники)
+bin/
+obj/
+
+# База данных 
+*.db
+*.db-shm
+*.db-wal

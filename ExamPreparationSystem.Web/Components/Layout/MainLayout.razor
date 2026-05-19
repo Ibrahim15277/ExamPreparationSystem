@@ -1,0 +1,24 @@
+﻿@inherits LayoutComponentBase
+
+<div class="d-flex">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark" style="width: 280px; min-height: 100vh;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4 fw-bold">🎓 Абитуриент-Центр</span>
+        </a>
+        <hr class="text-white">
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="/" class="nav-link text-white">🏠 Главная</a>
+            </li>
+            <li>
+                <a href="/subjects" class="nav-link text-white">📚 Выбор предмета</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="flex-grow-1" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh;">
+        <div class="container-fluid p-4 text-white">
+            @Body
+        </div>
+    </div>
+</div>

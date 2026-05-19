@@ -1,0 +1,84 @@
+﻿@page "/quiz"
+@using ExamPreparationSystem.Application
+@inject ExamService ExamService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+@if (ExamService.CurrentSubject == null)
+{
+    <div class="alert alert-warning shadow">
+        <h5>Предмет не выбран или сессия сброшена.</h5>
+        <a href="/subjects" class="btn btn-dark mt-2">Вернуться к выбору</a>
+    </div>
+}
+else if (ExamService.IsExamFinished)
+{
+    <div class="card p-5 shadow text-dark bg-light text-center border-0">
+        <h2 class="fw-bold mb-3">🎉 Тестирование завершено!</h2>
+        <h4 class="mb-4 text-muted">@ExamService.CurrentSubject.Name</h4>
+        
+        <div class="fs-2 mb-4">
+            Результат: 
+            <span class="text-success fw-bold">@ExamService.CorrectAnswersCount</span> из 
+            <span class="fw-bold">@ExamService.CurrentQuestions.Count</span>
+        </div>
+
+        <div>
+            <a href="/subjects" class="btn btn-primary btn-lg px-5 fw-bold shadow">Пройти еще раз</a>
+        </div>
+    </div>
+}
+else
+{
+    var currentQuestion = ExamService.CurrentQuestions[ExamService.CurrentQuestionIndex];
+    int totalQuestions = ExamService.CurrentQuestions.Count;
+
+    <h3 class="mb-3 fw-bold text-white">📋 Текущий тест: @ExamService.CurrentSubject.Name</h3>
+    
+    <div class="progress mb-4" style="height: 12px; border-radius: 6px;">
+        <div class="progress-bar bg-info" role="progressbar" id="exam-progress-bar"></div>
+    </div>
+
+    <div class="card shadow border-0 text-dark p-4 bg-light mb-4">
+        <h5 class="text-muted mb-2">Вопрос @(ExamService.CurrentQuestionIndex + 1) из @totalQuestions</h5>
+        <h3 class="fw-bold mb-4 text-dark">@currentQuestion.Text</h3>
+
+        <div class="d-grid gap-3">
+            @for (int i = 0; i < currentQuestion.Options.Count; i++)
+            {
+                int optionIndex = i;
+                <button type="button" class="btn btn-outline-dark text-start py-3 px-4 fs-5 fw-semibold" 
+                        @onclick="() => SelectOption(optionIndex)">
+                    @currentQuestion.Options[i]
+                </button>
+            }
+        </div>
+    </div>
+    
+    <button type="button" class="btn btn-outline-light px-4" @onclick="Cancel">Прервать тест</button>
+
+    <style>
+        #exam-progress-bar {
+            --progress-width: @($"{ProgressPercentage}%");
+            width: var(--progress-width);
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+}
+
+@code {
+    private int ProgressPercentage => ExamService.CurrentQuestions.Count > 0 
+        ? (int)(((double)ExamService.CurrentQuestionIndex / ExamService.CurrentQuestions.Count) * 100) 
+        : 0;
+
+    private void SelectOption(int index)
+    {
+        ExamService.SubmitAnswer(index);
+    }
+
+    private void Cancel()
+    {
+        ExamService.Reset();
+        Navigation.NavigateTo("/subjects");
+    }
+}

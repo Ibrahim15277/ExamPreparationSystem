@@ -1,0 +1,19 @@
+﻿version: '3.8'
+
+services:
+  web-app:
+    image: examprep-system:latest
+    container_name: exam_preparation_container
+    build:
+      context: .
+      dockerfile: ExamPreparationSystem.Web/Dockerfile
+    ports:
+      - "5000:8080"   # Сайт будет доступен на твоем компьютере по адресу http://localhost:5000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - exam_data:/app # Монтируем постоянное хранилище, чтобы файл базы данных SQLite (exam.db) не удалялся при перезапуске контейнера
+    restart: always
+
+volumes:
+  exam_data: # Объявление именованного тома для базы данных
