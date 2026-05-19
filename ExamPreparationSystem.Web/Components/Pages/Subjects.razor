@@ -14,8 +14,8 @@
                 <div class="card-body d-flex flex-column p-4">
                     <h4 class="card-title fw-bold text-primary">@subject.Name</h4>
                     <p class="card-text fs-5 text-muted">@subject.Description</p>
-                    <button type="button" class="btn btn-success btn-lg mt-3 fw-bold shadow-sm" @onclick="() => Start(subject.Id)">
-                        Начать тестирование 📝
+                    <button type="button" class="btn btn-primary btn-lg mt-3 fw-bold shadow-sm" @onclick="() => ViewTests(subject.Id)">
+                        Посмотреть варианты тестов 📂
                     </button>
                 </div>
             </div>
@@ -24,9 +24,8 @@
 </div>
 
 @code {
-    private void Start(int id)
+    private void ViewTests(int subjectId)
     {
-        ExamService.StartExam(id);
-        Navigation.NavigateTo("/quiz");
+        Navigation.NavigateTo($"/subjects/{subjectId}/tests");
     }
 }

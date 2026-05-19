@@ -4,10 +4,10 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-@if (ExamService.CurrentSubject == null)
+@if (ExamService.CurrentTest == null || ExamService.CurrentSubject == null)
 {
     <div class="alert alert-warning shadow">
-        <h5>Предмет не выбран или сессия сброшена.</h5>
+        <h5>Тест не выбран или сессия сброшена.</h5>
         <a href="/subjects" class="btn btn-dark mt-2">Вернуться к выбору</a>
     </div>
 }
@@ -15,7 +15,8 @@ else if (ExamService.IsExamFinished)
 {
     <div class="card p-5 shadow text-dark bg-light text-center border-0">
         <h2 class="fw-bold mb-3">🎉 Тестирование завершено!</h2>
-        <h4 class="mb-4 text-muted">@ExamService.CurrentSubject.Name</h4>
+        <h4 class="mb-2 text-primary fw-bold">@ExamService.CurrentSubject.Name</h4>
+        <h5 class="mb-4 text-muted">@ExamService.CurrentTest.Title</h5>
         
         <div class="fs-2 mb-4">
             Результат: 
@@ -24,7 +25,7 @@ else if (ExamService.IsExamFinished)
         </div>
 
         <div>
-            <a href="/subjects" class="btn btn-primary btn-lg px-5 fw-bold shadow">Пройти еще раз</a>
+            <a href="/subjects" class="btn btn-primary btn-lg px-5 fw-bold shadow">Пройти другие тесты</a>
         </div>
     </div>
 }
@@ -33,7 +34,8 @@ else
     var currentQuestion = ExamService.CurrentQuestions[ExamService.CurrentQuestionIndex];
     int totalQuestions = ExamService.CurrentQuestions.Count;
 
-    <h3 class="mb-3 fw-bold text-white">📋 Текущий тест: @ExamService.CurrentSubject.Name</h3>
+    <h3 class="mb-1 fw-bold text-white">📋 Направление: @ExamService.CurrentSubject.Name</h3>
+    <h5 class="mb-3 text-white-50">@ExamService.CurrentTest.Title</h5>
     
     <div class="progress mb-4" style="height: 12px; border-radius: 6px;">
         <div class="progress-bar bg-info" role="progressbar" id="exam-progress-bar"></div>

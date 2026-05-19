@@ -1,0 +1,53 @@
+﻿@page "/subjects/{SubjectId:int}/tests"
+@using ExamPreparationSystem.Application
+@using ExamPreparationSystem.Domain
+@inject ExamService ExamService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+@if (subject == null)
+{
+    <div class="alert alert-danger">Предмет не найден.</div>
+}
+else
+{
+    <h3 class="mb-2 fw-bold text-white">📂 Доступные тесты по направлению: @subject.Name</h3>
+    <p class="text-white-50 mb-4 fs-5">Выберите один из вариантов для начала проверки знаний.</p>
+
+    <div class="row">
+        @foreach (var test in ExamService.GetTestsBySubject(SubjectId))
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card bg-light text-dark shadow border-0 h-100">
+                    <div class="card-body d-flex flex-column p-4">
+                        <h4 class="card-title fw-bold text-success">@test.Title</h4>
+                        <p class="card-text text-muted">@test.Description</p>
+                        <button type="button" class="btn btn-success btn-lg mt-auto fw-bold shadow-sm" @onclick="() => Start(test.Id)">
+                            Запустить этот вариант 📝
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <a href="/subjects" class="btn btn-outline-light mt-2">Назад к предметам</a>
+}
+
+@code {
+    [Parameter]
+    public int SubjectId { get; set; }
+
+    private Subject? subject;
+
+    protected override void OnInitialized()
+    {
+        subject = ExamService.GetSubjectById(SubjectId);
+    }
+
+    private void Start(int testId)
+    {
+        ExamService.StartTest(testId);
+        Navigation.NavigateTo("/quiz");
+    }
+}
